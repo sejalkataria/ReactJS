@@ -8,16 +8,19 @@ export default function TextForm(props) {
     const handleClick = () => {
         let newText = text.toUpperCase()
         setText(newText)
+        props.showAlert('converting to upperCase', 'success')
     }
     const handleLowClick = () => {
         let newText = text.toLowerCase()
         setText(newText)
+        props.showAlert('converting to lowerCase', 'success')
     }
     const copyToClipBoard = () => {
         let copyText = document.getElementById('myBox')
         copyText.select()
         navigator.clipboard.writeText(copyText.value)
-        alert("Copied the text:-" + copyText.value)
+        // alert("Copied the text:-" + copyText.value)
+        props.showAlert(`copied message:- ${copyText.value}`, 'success')
     }
     const downloadFile = () => {
         const textToWrite = document.getElementById('myBox').value
@@ -39,15 +42,19 @@ export default function TextForm(props) {
             document.body.appendChild(downloadLink);
         }
         downloadLink.click();
+        props.showAlert('download complete', 'success')
     }
-    // const handleCursor = () => {
-    //     setText('')
-    // }
-
+    
+    const removeExtraSpaces = () => {
+        let newText = text.split(/[ ]+/);
+        setText(newText.join(' '))
+        props.showAlert('removed extra spaces', 'success')
+    }
+    
     const [text, setText] = useState('')
     return (
         <>
-            <div className='container' style={{ color: props.mode === 'dark' ? 'white' : '042743' }}>
+            <div className='container' style={{ color: props.mode === 'dark' ? 'white' : '#042743' }}>
                 <h1>{props.heading}</h1>
                 <div className="mb-3">
                     <label htmlFor="myBox" className="form-label"></label>
@@ -57,6 +64,7 @@ export default function TextForm(props) {
                 <button className="btn btn-primary mx-1" onClick={handleLowClick}>set to lowerCase</button>
                 <button className="btn btn-primary mx-1" onClick={copyToClipBoard}>copy text</button>
                 <button className="btn btn-primary mx-1" onClick={downloadFile}>download</button>
+                <button className="btn btn-primary mx-1" onClick={removeExtraSpaces}>Remove extra spaces</button>
             </div>
             <div className="container my-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>
                 <h2>Your text Summary</h2>
