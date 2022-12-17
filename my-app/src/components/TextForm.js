@@ -19,7 +19,7 @@ export default function TextForm(props) {
         let copyText = document.getElementById('myBox')
         copyText.select()
         navigator.clipboard.writeText(copyText.value)
-        // alert("Copied the text:-" + copyText.value)
+        document.getSelection().removeAllRanges()
         props.showAlert(`copied message:- ${copyText.value}`, 'success')
     }
     const downloadFile = () => {
@@ -44,13 +44,13 @@ export default function TextForm(props) {
         downloadLink.click();
         props.showAlert('download complete', 'success')
     }
-    
+
     const removeExtraSpaces = () => {
         let newText = text.split(/[ ]+/);
         setText(newText.join(' '))
         props.showAlert('removed extra spaces', 'success')
     }
-    
+
     const [text, setText] = useState('')
     return (
         <>
@@ -58,20 +58,20 @@ export default function TextForm(props) {
                 <h1>{props.heading}</h1>
                 <div className="mb-3">
                     <label htmlFor="myBox" className="form-label"></label>
-                    <textarea className="form-control" style={{ backgroundColor: props.mode === 'dark' ? 'grey' : 'white', color: props.mode === 'dark' ? 'white' : '042743' }} value={text} onChange={handleChange} id="myBox" rows="8"></textarea>
+                    <textarea className="form-control" style={{ backgroundColor: props.mode === 'dark' ? '#13466e' : 'white', color: props.mode === 'dark' ? 'white' : '042743' }} value={text} onChange={handleChange} id="myBox" rows="8"></textarea>
                 </div>
-                <button className="btn btn-primary mx-1" onClick={handleClick}>set to upperCase</button>
-                <button className="btn btn-primary mx-1" onClick={handleLowClick}>set to lowerCase</button>
-                <button className="btn btn-primary mx-1" onClick={copyToClipBoard}>copy text</button>
-                <button className="btn btn-primary mx-1" onClick={downloadFile}>download</button>
-                <button className="btn btn-primary mx-1" onClick={removeExtraSpaces}>Remove extra spaces</button>
+                <button disabled={text.length === 0} className="btn btn-primary mx-1 my-1" onClick={handleClick}>set to upperCase</button>
+                <button disabled={text.length === 0} className="btn btn-primary mx-1 my-1" onClick={handleLowClick}>set to lowerCase</button>
+                <button disabled={text.length === 0} className="btn btn-primary mx-1 my-1" onClick={copyToClipBoard}>copy text</button>
+                <button disabled={text.length === 0} className="btn btn-primary mx-1 my-1" onClick={downloadFile}>download</button>
+                <button disabled={text.length === 0} className="btn btn-primary mx-1 my-1" onClick={removeExtraSpaces}>Remove extra spaces</button>
             </div>
             <div className="container my-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>
                 <h2>Your text Summary</h2>
-                <p>{text.split(' ').length} words and {text.length} characters</p>
-                <p>{0.008 * text.split(' ').length} minutes read</p>
+                <p>{text.split(' ').filter((element) => { return element.length !== 0 }).length} words and {text.length} characters</p>
+                <p>{0.008 * text.split(' ').filter((element) => { return element.length !== 0 }).length} minutes read</p>
                 <h2>Preview</h2>
-                <p>{text.length > 0 ? text : 'Enter something in the textbox above to preview it here'}</p>
+                <p>{text.length > 0 ? text : 'Nothing to Preview'}</p>
             </div>
         </>
     )
