@@ -5,15 +5,15 @@ import PropTypes from 'prop-types'
 
 
 export class News extends Component {
-  static defaultProps={
-     country: 'in',
-     pageSize:8,
-     category:'general'
+  static defaultProps = {
+    country: 'in',
+    pageSize: 8,
+    category: 'general'
   }
-  static propTypes={
-      country:PropTypes.string,
-      pageSize:PropTypes.number,
-      category:PropTypes.string,
+  static propTypes = {
+    country: PropTypes.string,
+    pageSize: PropTypes.number,
+    category: PropTypes.string,
   }
   constructor() {
     super()
@@ -23,7 +23,7 @@ export class News extends Component {
       page: 1
     }
   }
-  async componentDidMount() {
+  async updateNews() {
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=&page=1&pageSize=${this.props.pageSize}`
     this.setState({ loading: true })
     let data = await fetch(url)
@@ -34,30 +34,22 @@ export class News extends Component {
       loading: false
     })
   }
+
+  async componentDidMount() {
+    this.updateNews()
+  }
   handlePrevClick = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`
-    this.setState({ loading: true })
-    let data = await fetch(url)
-    let parsedData = await data.json()
     this.setState({
-      page: this.state.page - 1,
-      articles: parsedData.articles,
-      loading: false
+      page: this.state.page - 1
     })
+    this.updateNews()
   }
 
   handleNextClick = async () => {
-    if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize))) {
-      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`
-      this.setState({ loading: true })
-      let data = await fetch(url)
-      let parsedData = await data.json()
-      this.setState({
-        page: this.state.page + 1,
-        articles: parsedData.articles,
-        loading: false
-      })
-    }
+    this.setState({
+      page: this.state.page + 1
+    })
+    this.updateNews()
   }
   render() {
     return (
@@ -68,7 +60,9 @@ export class News extends Component {
           {!this.state.loading && this.state.articles.map((element) => {
             return <div className="col-md-4" key={element.url} >
               <NewsItem title={element.title ? element.title.slice(0, 42) : ''}
-                description={element.description ? element.description.slice(0, 72) : ''} imageUrl={element.urlToImage} newsUrl={element.url} />
+                description={element.description ? element.description.slice(0, 72) : ''}
+                imageUrl={element.urlToImage} newsUrl={element.url}
+                source={element.source.name} date={element.publishedAt} author={element.author} />
             </div>
           })}
 
