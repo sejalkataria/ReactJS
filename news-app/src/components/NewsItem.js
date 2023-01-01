@@ -6,7 +6,7 @@ export default class NewsItem extends Component {
     return (
       <div className='my-3'>
         <div className="card">
-          <img style={{ height: '160px' }} src={imageUrl} className="card-img-top" alt="..." />
+          <img style={{ height: '160px' }} src={!imageUrl ? "https://fdn.gsmarena.com/imgroot/news/21/08/xiaomi-smart-home-india-annoucnements/-476x249w4/gsmarena_00.jpg" : imageUrl} className="card-img-top" alt="..." />
           <div className="card-body">
             <h5 className="card-title">{title}<span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger"
               style={{ left: '90%', zIndex: '1' }}>
